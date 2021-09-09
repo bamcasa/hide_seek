@@ -61,7 +61,7 @@ class Hide_Seek:
     def show_player(self):
         for plyaer in self.players:
             pygame.draw.circle(self.screen, BLACK, (plyaer[0], plyaer[1]), self.player_size)
-        print(self.player_x,self.player_y)
+        #print(self.player_x,self.player_y)
 
     def move_player(self):
         if self.is_not_in_box():
@@ -69,7 +69,14 @@ class Hide_Seek:
             self.players[0][1] += self.player_y
 
     def create_box(self): #임시 마우스로 box생성
-        pass
+        new_box = [0, 0, 0, 0]
+        new_box[0] = self.first_pos[0]
+        new_box[1] = self.first_pos[1]
+        new_box[2] = self.pos[0] - self.first_pos[0]
+        new_box[3] = self.pos[1] - self.first_pos[1]
+        self.boxs.append(new_box)
+
+        self.clicked = False
 
 
     def is_not_in_box(self):
@@ -94,6 +101,10 @@ class Hide_Seek:
     def click(self):
         if self.clicked == False:
             self.clicked = True
+            self.first_pos = self.pos
+        elif self.clicked == True:
+            self.create_box()
+            self.clicked = False
 
         if self.click_is_in_exit_button():
             pygame.quit()
