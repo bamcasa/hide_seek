@@ -20,11 +20,13 @@ class Hide_Seek:
     def __init__(self):
         self.FPS = 30
         infoObject = pygame.display.Info()
+        print(infoObject)
         self.screen_size = (infoObject.current_w, infoObject.current_h)
+
         self.players = [[10,10]]
 
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-        #self.screen = pygame.display.set_mode((1520,580))
+        self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        #self.screen = pygame.display.set_mode((1920,1080))
 
         self.font = pygame.font.SysFont("notosanscjkkr", 30)
         pygame.display.set_caption("hide_seek")
@@ -44,7 +46,7 @@ class Hide_Seek:
         #object location
         self.exit_button_pos = [1150, 0, 400, 200] #(1150,0)에서 x로 400 y로 200
 
-        self.boxs = [[300,300,300,300], [700,700,100,100]]
+        self.boxs = [[300,0,300,300], [700,700,100,100]]
 
     def show_background(self):
         pygame.draw.rect(self.screen, ARMADILLO, (0, 0, self.screen_size[0], self.screen_size[1]))  # 배경 채우기
@@ -75,7 +77,6 @@ class Hide_Seek:
         new_box[2] = self.pos[0] - self.first_pos[0]
         new_box[3] = self.pos[1] - self.first_pos[1]
         self.boxs.append(new_box)
-
         self.clicked = False
 
 
@@ -139,8 +140,9 @@ class Hide_Seek:
             self.show_background()
             self.show_pos()
             self.show_objects()
-            self.show_player()
             self.move_player()
+            self.show_player()
+
 
             pygame.display.flip()
 
