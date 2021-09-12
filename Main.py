@@ -133,13 +133,13 @@ class Hide_Seek:
                     self.click()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
-                        self.player_y += self.speed
-                    if event.key == pygame.K_UP:
                         self.player_y -= self.speed
+                    if event.key == pygame.K_UP:
+                        self.player_y += self.speed
                     if event.key == pygame.K_LEFT:
-                        self.player_x -= self.speed
-                    if event.key == pygame.K_RIGHT:
                         self.player_x += self.speed
+                    if event.key == pygame.K_RIGHT:
+                        self.player_x -= self.speed
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
                         self.player_y = 0
