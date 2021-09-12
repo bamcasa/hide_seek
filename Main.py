@@ -1,5 +1,6 @@
 import pygame
 import sys
+import json
 import random
 import numpy as np
 import copy
@@ -18,12 +19,15 @@ RED = (255, 0, 0)
 
 class Hide_Seek:
     def __init__(self):
+        with open("map/test_map.txt", "r") as f:
+            self.objects = json.loads(f.read())
+
         self.FPS = 30
         infoObject = pygame.display.Info()
         print(infoObject)
         self.screen_size = (infoObject.current_w, infoObject.current_h)
 
-        self.players = [[10,10]]
+        self.players = [[infoObject.current_w / 2, infoObject.current_h / 2]]
 
         self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
         #self.screen = pygame.display.set_mode((1920,1080))
@@ -46,14 +50,14 @@ class Hide_Seek:
         #object location
         self.exit_button_pos = [1150, 0, 400, 200] #(1150,0)에서 x로 400 y로 200
 
-        self.boxs = [[300,0,300,300], [700,700,100,100]]
+        #self.objects = [[300, 0, 300, 300], [700, 700, 100, 100]]
 
     def show_background(self):
         pygame.draw.rect(self.screen, ARMADILLO, (0, 0, self.screen_size[0], self.screen_size[1]))  # 배경 채우기
 
     def show_objects(self):
         pygame.draw.rect(self.screen, RED, self.exit_button_pos) #print exit_button
-        for box in self.boxs:
+        for box in self.objects:
             pygame.draw.rect(self.screen, WHITE, box)
 
     def show_pos(self):
@@ -70,25 +74,30 @@ class Hide_Seek:
             self.players[0][0] += self.player_x
             self.players[0][1] += self.player_y
 
+    def move_objects(self):
+        for box in self.objects:
+            box[0] += self.player_x
+            box[1] += self.player_y
+
     def create_box(self): #임시 마우스로 box생성
         new_box = [0, 0, 0, 0]
         new_box[0] = self.first_pos[0]
         new_box[1] = self.first_pos[1]
         new_box[2] = self.pos[0] - self.first_pos[0]
         new_box[3] = self.pos[1] - self.first_pos[1]
-        self.boxs.append(new_box)
+        self.objects.append(new_box)
         self.clicked = False
 
 
     def is_not_in_box(self):
         result = 0
-        for box in self.boxs:
+        for box in self.objects:
             if self.players[0][0] + self.player_x <= box[0] - self.player_size - 10 or self.players[0][0] + self.player_x >= box[0] + box[2] + self.player_size + 10\
                 or self.players[0][1] + self.player_y <= box[1] -   self.player_size - 10 or self.players[0][1] + self.player_y >= box[1] + box[3] + self.player_size + 10:
                 result += 1
             else:
                 result += 0
-        if result == len(self.boxs):
+        if result == len(self.objects):
             return True
         else:
             return False
@@ -140,7 +149,7 @@ class Hide_Seek:
             self.show_background()
             self.show_pos()
             self.show_objects()
-            self.move_player()
+            self.move_objects()
             self.show_player()
 
 
