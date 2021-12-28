@@ -1,6 +1,9 @@
 import pygame
 import sys
 import json
+import socket
+import threading
+import pickle
 import random
 import numpy as np
 import copy
@@ -19,14 +22,26 @@ RED = (255, 0, 0)
 
 class Hide_Seek:
     def __init__(self):
+        #socket constant number
+        HOST = socket.gethostbyname(socket.gethostname())
+        PORT = 9999
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect((HOST, PORT))
+
+        t = threading.Thread(target=self.recv)
+        t.start()
+
+
+
+
+        #pygame constant number
         with open("map/test_map.txt", "r") as f:
             self.objects = json.loads(f.read())
 
         self.FPS = 30
         infoObject = pygame.display.Info()
-        print(infoObject)
+        #print(infoObject)
         self.screen_size = (infoObject.current_w, infoObject.current_h)
-
         self.players = [[infoObject.current_w / 2, infoObject.current_h / 2]] #화면의 중앙
         self.real_players_pos = [[50, 50]]
 
@@ -53,6 +68,42 @@ class Hide_Seek:
         self.exit_button_pos = [1150, 0, 400, 200] # (1150,0)에서 x로 400 y로 200
 
         # self.objects = [[300, 0, 300, 300], [700, 700, 100, 100]]
+
+    #소켓 부분
+        HOST = socket.gethostbyname(socket.gethostname())
+        PORT = 9999
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect((HOST, PORT))
+
+
+    def send(self):
+        y = self.players[0]
+        msg = pickle.dumps(y)
+        #print(y)
+        self.client_socket.send(msg)
+
+    def recv(self):
+        data = self.client_socket.recv(1024)
+        #t = threading.Thread(target=self.recv)
+        #t.start()
+        print(data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def show_background(self):
         pygame.draw.rect(self.screen, ARMADILLO, (0, 0, self.screen_size[0], self.screen_size[1]))  # 배경 채우기
@@ -141,13 +192,14 @@ class Hide_Seek:
                     if event.key == pygame.K_LEFT:
                         self.player_x += self.speed
                     if event.key == pygame.K_RIGHT:
+                        self.send()
                         self.player_x -= self.speed
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
                         self.player_y = 0
                     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                         self.player_x = 0
-
+            #self.send()
             self.show_background()
             self.show_pos()
             self.show_objects()

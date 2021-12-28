@@ -19,7 +19,7 @@ RED = (255, 0, 0)
 
 class Hide_Seek:
     def __init__(self):
-        with open("map/test_map.txt", "r") as f:
+        with open("test_map.txt", "r") as f:
             self.objects = json.loads(f.read())
 
         self.FPS = 30
@@ -27,11 +27,9 @@ class Hide_Seek:
         print(infoObject)
         self.screen_size = (infoObject.current_w, infoObject.current_h)
 
-        self.players = [[infoObject.current_w / 2, infoObject.current_h / 2]] #화면의 중앙
-        self.real_players_pos = [[50, 50]]
+        self.players = [[infoObject.current_w / 2, infoObject.current_h / 2]]
 
-
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
         #self.screen = pygame.display.set_mode((1920,1080))
 
         self.font = pygame.font.SysFont("notosanscjkkr", 30)
@@ -44,21 +42,21 @@ class Hide_Seek:
 
         self.speed = 10
 
-        self.pos = [0, 0]
+        self.pos = [0,0]
 
-        self.first_pos = [0, 0] #임시
+        self.first_pos = [0,0] #임시
         self.clicked = False
 
-        # object location
-        self.exit_button_pos = [1150, 0, 400, 200] # (1150,0)에서 x로 400 y로 200
+        #object location
+        self.exit_button_pos = [1150, 0, 400, 200] #(1150,0)에서 x로 400 y로 200
 
-        # self.objects = [[300, 0, 300, 300], [700, 700, 100, 100]]
+        #self.objects = [[300, 0, 300, 300], [700, 700, 100, 100]]
 
     def show_background(self):
         pygame.draw.rect(self.screen, ARMADILLO, (0, 0, self.screen_size[0], self.screen_size[1]))  # 배경 채우기
 
     def show_objects(self):
-        pygame.draw.rect(self.screen, RED, self.exit_button_pos) # print exit_button
+        pygame.draw.rect(self.screen, RED, self.exit_button_pos) #print exit_button
         for box in self.objects:
             pygame.draw.rect(self.screen, WHITE, box)
 
@@ -69,7 +67,7 @@ class Hide_Seek:
     def show_player(self):
         for plyaer in self.players:
             pygame.draw.circle(self.screen, BLACK, (plyaer[0], plyaer[1]), self.player_size)
-        # print(self.player_x,self.player_y)
+        #print(self.player_x,self.player_y)
 
     def move_player(self):
         if self.is_not_in_box():
@@ -81,7 +79,7 @@ class Hide_Seek:
             box[0] += self.player_x
             box[1] += self.player_y
 
-    def create_box(self): # 임시 마우스로 box생성
+    def create_box(self): #임시 마우스로 box생성
         new_box = [0, 0, 0, 0]
         new_box[0] = self.first_pos[0]
         new_box[1] = self.first_pos[1]
@@ -135,13 +133,13 @@ class Hide_Seek:
                     self.click()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
-                        self.player_y -= self.speed
-                    if event.key == pygame.K_UP:
                         self.player_y += self.speed
+                    if event.key == pygame.K_UP:
+                        self.player_y -= self.speed
                     if event.key == pygame.K_LEFT:
-                        self.player_x += self.speed
-                    if event.key == pygame.K_RIGHT:
                         self.player_x -= self.speed
+                    if event.key == pygame.K_RIGHT:
+                        self.player_x += self.speed
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
                         self.player_y = 0
